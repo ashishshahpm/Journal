@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Reflection</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .screen { display: none; padding: 20px; }
+        #home-screen { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen">
+        <h1>Daily Reflection</h1>
+        <div id="questions-container"></div>
+        <button id="save-responses">Save Responses</button>
+        <br><br>
+        <button id="go-to-add-questions">Add Questions</button>
+        <button id="go-to-history">View History</button>
+        <br><br>
+        <input type="file" id="load-file">
+    </div>
+
+    <!-- Add Question Screen -->
+    <div id="add-question-screen" class="screen">
+        <h1>Add a Question</h1>
+        <input type="text" id="new-question" placeholder="Enter new question">
+        <button id="add-question">Add</button>
+        <br><br>
+        <button id="go-to-home-from-add">Back to Home</button>
+    </div>
+
+    <!-- History Screen -->
+    <div id="history-screen" class="screen">
+        <h1>Response History</h1>
+        <div id="history-container"></div>
+        <br>
+        <button id="go-to-home-from-history">Back to Home</button>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
