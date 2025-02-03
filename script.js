@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const goToHomeFromAdd = document.getElementById("go-to-home-from-add");
   const goToHomeFromHistory = document.getElementById("go-to-home-from-history");
 
-  let questions = JSON.parse(localStorage.getItem("questions")) || [];
-  let history = JSON.parse(localStorage.getItem("history")) || [];
+  let questions = [];
+  let history = [];
 
   function saveToFile() {
     const data = JSON.stringify({ questions, history });
@@ -24,20 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
     a.click();
   }
 
-  function loadFromFile(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = JSON.parse(e.target.result);
-      questions = data.questions || [];
-      history = data.history || [];
-      localStorage.setItem("questions", JSON.stringify(questions));
-      localStorage.setItem("history", JSON.stringify(history));
-      renderQuestions();
-      renderHistory();
-    };
-    reader.readAsText(file);
+  function loadFromFile() {
+    fetch("reflection_data.json")
+      .then(response => response.json())
+      .then(data => {
+        questions = data.questions || [];
+        history = data.history || [];
+        localStorage.setItem("questions", JSON.stringify(questions));
+        localStorage.setItem("history", JSON.stringify(history));
+        renderQuestions();
+        renderHistory();
+      })
+      .catch(() => {
+        console.log("No existing file found. Using default localStorage values.");
+        questions = JSON.parse(localStorage.getItem("questions")) || [];
+        history = JSON.parse(localStorage.getItem("history")) || [];
+        renderQuestions();
+        renderHistory();
+      });
   }
 
   function renderQuestions() {
@@ -94,15 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
     screen.style.display = "block";
   }
 
-  renderQuestions();
-  renderHistory();
-
+  loadFromFile();
   saveButton.addEventListener("click", saveResponses);
   addQuestionButton.addEventListener("click", addQuestion);
   goToAddQuestions.addEventListener("click", () => showScreen(addQuestionScreen));
   goToHistory.addEventListener("click", () => showScreen(historyScreen));
   goToHomeFromAdd.addEventListener("click", () => showScreen(homeScreen));
   goToHomeFromHistory.addEventListener("click", () => showScreen(homeScreen));
-
-  document.getElementById("load-file").addEventListener("change", loadFromFile);
 });
