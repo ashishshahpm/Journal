@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
     a.href = URL.createObjectURL(blob);
     a.download = "reflection_data.json";
     a.click();
+    
+    // Immediately reload the file to reflect new data
+    setTimeout(loadFromFile, 500);
   }
 
   function loadFromFile() {
@@ -102,7 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
   saveButton.addEventListener("click", saveResponses);
   addQuestionButton.addEventListener("click", addQuestion);
   goToAddQuestions.addEventListener("click", () => showScreen(addQuestionScreen));
-  goToHistory.addEventListener("click", () => showScreen(historyScreen));
+  goToHistory.addEventListener("click", () => {
+    loadFromFile(); // Ensure latest data is loaded before viewing history
+    showScreen(historyScreen);
+  });
   goToHomeFromAdd.addEventListener("click", () => showScreen(homeScreen));
   goToHomeFromHistory.addEventListener("click", () => showScreen(homeScreen));
 });
