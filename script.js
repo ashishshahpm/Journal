@@ -12,39 +12,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const goToHomeFromAdd = document.getElementById("go-to-home-from-add");
   const goToHomeFromHistory = document.getElementById("go-to-home-from-history");
 
-  let questions = [];
-  let history = [];
+  let questions = JSON.parse(localStorage.getItem("questions")) || [];
+  let history = JSON.parse(localStorage.getItem("history")) || [];
 
   function saveToFile() {
     const data = JSON.stringify({ questions, history });
-    const blob = new Blob([data], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "reflection_data.json";
-    a.click();
-    
-    // Immediately reload the file to reflect new data
-    setTimeout(loadFromFile, 500);
+    localStorage.setItem("questions", JSON.stringify(questions));
+    localStorage.setItem("history", JSON.stringify(history));
   }
 
   function loadFromFile() {
-    fetch("reflection_data.json")
-      .then(response => response.json())
-      .then(data => {
-        questions = data.questions || [];
-        history = data.history || [];
-        localStorage.setItem("questions", JSON.stringify(questions));
-        localStorage.setItem("history", JSON.stringify(history));
-        renderQuestions();
-        renderHistory();
-      })
-      .catch(() => {
-        console.log("No existing file found. Using default localStorage values.");
-        questions = JSON.parse(localStorage.getItem("questions")) || [];
-        history = JSON.parse(localStorage.getItem("history")) || [];
-        renderQuestions();
-        renderHistory();
-      });
+    questions = JSON.parse(localStorage.getItem("questions")) || [];
+    history = JSON.parse(localStorage.getItem("history")) || [];
+    renderQuestions();
+    renderHistory();
   }
 
   function renderQuestions() {
@@ -64,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
       responses[questions[questionIndex]] = input.value;
     });
     history.push(responses);
-    localStorage.setItem("history", JSON.stringify(history));
     saveToFile();
   }
 
@@ -72,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const newQuestion = addQuestionInput.value.trim();
     if (newQuestion) {
       questions.push(newQuestion);
-      localStorage.setItem("questions", JSON.stringify(questions));
+      saveToFile();
       addQuestionInput.value = "";
       renderQuestions();
     }
